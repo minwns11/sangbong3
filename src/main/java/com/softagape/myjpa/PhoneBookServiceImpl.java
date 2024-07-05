@@ -17,14 +17,14 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
             return false;
         } else if (dto.getName() == null || dto.getName().isEmpty() ) {
             return false;
-        } else if (dto.getCategory() == null || dto.getCategory().isEmpty() ) {
+        } else if (dto.getCategory() == null ) {
             return false;
         }
         return true;
     }
     @Override
     public IPhoneBook findById(Long id) {
-        Optional<PhonebookEntity> find = this.phoneBookJpaRpository.findById(id); // <PhonebookEntity> 저장할 데이터(Long, null) 부모 데이터 저장X, 자동 형변환
+        Optional<PhonebookEntity> find = this.phoneBookJpaRpository.findById(id); // Optional final이므로 부모가 될 수 없음. <PhonebookEntity>에 저장할 데이터(Long, null) 부모 데이터 저장X, 자동 형변환, null값이 들어가도 강제종료를 막기 위한
         return find.orElse(null);
     }
 
@@ -38,7 +38,7 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
     }
 
     @Override
-    public IPhoneBook insert(String name, String category, String phoneNumber, String email) throws Exception {
+    public IPhoneBook insert(String name, ECategory category, String phoneNumber, String email) throws Exception {
         PhonebookDto phoneBook = PhonebookDto.builder()
                 .id(0L)
                 .name(name).category(category)
@@ -89,11 +89,18 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
     @Override
     public IPhoneBook update(Long id, IPhoneBook phoneBook) {
         IPhoneBook find = this.findById(id);
-        if (find != null) {
-            find.copyFields(phoneBook);
-            return find;
+        if (find == null) {
+            return null;
         }
-        return null;
+//        PhonebookEntity entity = PhonebookEntity.builder()
+//                .id(id).name(find.getName()).category(find.getCategory())
+//                .phoneNumber(find.getPhoneNumber()).build();
+//        entity.copyFields(phoneBook);
+//        PhonebookEntity result = this.phoneBookJpaRpository.saveAndFlush(entity);
+//        entity.setName("entity");
+        find.copyFields(phoneBook);
+        PhonebookEntity result = this.phoneBookJpaRpository.saveAndFlush((PhonebookEntity) find);
+        return result;
     }
 
     @Override
@@ -101,7 +108,12 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (findName == null || findName.isEmpty()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>();
+        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByNameContains(findName);
+        List<IPhoneBook> result = new ArrayList<>();
+        for ( PhonebookEntity item : list ) {
+            result.add((IPhoneBook) item);
+        }
+        return result;
     }
 
     @Override
@@ -109,7 +121,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (category == null) {
             return new ArrayList<>();
         }
-        return new ArrayList<>();
+        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByCategory(category);
+        List<IPhoneBook> result = list.stream()
+                .map(x -> (IPhoneBook)x)
+                .toList();
+        return result;
     }
 
     @Override
@@ -117,7 +133,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (findPhone == null || findPhone.isEmpty()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>();
+        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByPhoneNumberContains(findPhone);
+        List<IPhoneBook> result = list.stream()
+                .map(item -> (IPhoneBook)item)
+                .toList();
+        return result;
     }
 
     @Override
@@ -125,7 +145,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (findEmail == null || findEmail.isEmpty()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>();
+        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByEmailContains(findEmail);
+        List<IPhoneBook> result = list.stream()
+                .map(node -> (IPhoneBook)node)
+                .toList();
+        return result;
     }
 
 }
