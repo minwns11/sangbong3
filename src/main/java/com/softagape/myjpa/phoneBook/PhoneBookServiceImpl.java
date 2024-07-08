@@ -1,4 +1,4 @@
-package com.softagape.myjpa;
+package com.softagape.myjpa.phoneBook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

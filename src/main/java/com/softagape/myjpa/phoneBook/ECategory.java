@@ -1,6 +1,4 @@
-package com.softagape.myjpa;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
+package com.softagape.myjpa.phoneBook;
 
 public enum ECategory {
     Friends(0),

@@ -1,4 +1,4 @@
-package com.softagape.myjpa;
+package com.softagape.myjpa.phoneBook;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

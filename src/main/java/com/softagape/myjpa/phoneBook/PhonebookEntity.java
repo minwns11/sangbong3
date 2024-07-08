@@ -1,4 +1,4 @@
-package com.softagape.myjpa;
+package com.softagape.myjpa.phoneBook;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

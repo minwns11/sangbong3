@@ -1,4 +1,4 @@
-package com.softagape.myjpa;
+package com.softagape.myjpa.phoneBook;
 
 import java.io.Serializable;
 
