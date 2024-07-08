@@ -25,6 +25,4 @@ public enum ECategory {
         }
         throw new IllegalArgumentException("ECategory value :" + value);
     }
-
-
 }

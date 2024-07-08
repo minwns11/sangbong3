@@ -22,6 +22,21 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         }
         return true;
     }
+
+    private List<IPhoneBook> getIPhoneBookList(List<PhonebookEntity> list) {
+        if ( list == null || list.size() <= 0 ) {
+            return new ArrayList<>();
+        }
+        List<IPhoneBook> result = new ArrayList<>();
+        for( PhonebookEntity entity : list ) {
+            result.add((IPhoneBook)entity);
+        }
+//        List<IPhoneBook> result = list.stream()
+//                .map(item -> (IPhoneBook)item)
+//                .toList()
+        return result;
+    }
+
     @Override
     public IPhoneBook findById(Long id) {
         Optional<PhonebookEntity> find = this.phoneBookJpaRpository.findById(id); // Optional final이므로 부모가 될 수 없음. <PhonebookEntity>에 저장할 데이터(Long, null) 부모 데이터 저장X, 자동 형변환, null값이 들어가도 강제종료를 막기 위한
@@ -108,11 +123,12 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (findName == null || findName.isEmpty()) {
             return new ArrayList<>();
         }
-        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByNameContains(findName);
-        List<IPhoneBook> result = new ArrayList<>();
-        for ( PhonebookEntity item : list ) {
-            result.add((IPhoneBook) item);
-        }
+        List<IPhoneBook> result = this.getIPhoneBookList(this.phoneBookJpaRpository.findAllByNameContains(findName));
+//        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByNameContains(findName);
+//        List<IPhoneBook> result = new ArrayList<>();
+//        for ( PhonebookEntity item : list ) {
+//            result.add((IPhoneBook) item);
+//        }
         return result;
     }
 
@@ -121,10 +137,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (category == null) {
             return new ArrayList<>();
         }
-        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByCategory(category);
-        List<IPhoneBook> result = list.stream()
-                .map(x -> (IPhoneBook)x)
-                .toList();
+        List<IPhoneBook> result = this.getIPhoneBookList(this.phoneBookJpaRpository.findAllByCategory(category));
+//        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByCategory(category);
+//        List<IPhoneBook> result = list.stream()
+//                .map(x -> (IPhoneBook)x)
+//                .toList();
         return result;
     }
 
@@ -133,10 +150,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (findPhone == null || findPhone.isEmpty()) {
             return new ArrayList<>();
         }
-        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByPhoneNumberContains(findPhone);
-        List<IPhoneBook> result = list.stream()
-                .map(item -> (IPhoneBook)item)
-                .toList();
+        List<IPhoneBook> result = this.getIPhoneBookList(this.phoneBookJpaRpository.findAllByPhoneNumberContains(findPhone));
+//        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByPhoneNumberContains(findPhone);
+//        List<IPhoneBook> result = list.stream()
+//                .map(item -> (IPhoneBook)item)
+//                .toList();
         return result;
     }
 
@@ -145,10 +163,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
         if (findEmail == null || findEmail.isEmpty()) {
             return new ArrayList<>();
         }
-        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByEmailContains(findEmail);
-        List<IPhoneBook> result = list.stream()
-                .map(node -> (IPhoneBook)node)
-                .toList();
+        List<IPhoneBook> result = this.getIPhoneBookList(this.phoneBookJpaRpository.findAllByEmailContains(findEmail));
+//        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByEmailContains(findEmail);
+//        List<IPhoneBook> result = list.stream()
+//                .map(node -> (IPhoneBook)node)
+//                .toList();
         return result;
     }
 
