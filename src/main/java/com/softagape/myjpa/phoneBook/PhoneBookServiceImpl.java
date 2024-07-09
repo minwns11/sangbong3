@@ -1,5 +1,7 @@
 package com.softagape.myjpa.phoneBook;
 
+import com.softagape.myjpa.catCategory.CategoryEntity;
+import com.softagape.myjpa.catCategory.ICategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,21 +55,13 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
     }
 
     @Override
-    public IPhoneBook insert(String name, ECategory category, String phoneNumber, String email) throws Exception {
-        PhonebookDto phoneBook = PhonebookDto.builder()
-                .id(0L)
-                .name(name).category(category)
-                .phoneNumber(phoneNumber).email(email).build();
-        return this.insert(phoneBook);
-    }
-
-    @Override
     public IPhoneBook insert(IPhoneBook phoneBook) throws Exception {
         if ( !this.isValidInsert(phoneBook)) {
             return null;
         }
         PhonebookEntity entity = new PhonebookEntity();
         entity.copyFields(phoneBook);
+        entity.setId(0L);
         IPhoneBook result = this.phoneBookJpaRpository.saveAndFlush(entity); // save - flush 같이 표기,
         return result;
     }
@@ -133,11 +127,11 @@ public class PhoneBookServiceImpl implements IPhoneBookService<IPhoneBook> {
     }
 
     @Override
-    public List<IPhoneBook> getListFromGroup(ECategory category) {
+    public List<IPhoneBook> getListFromCategory(ICategory category) {
         if (category == null) {
             return new ArrayList<>();
         }
-        List<IPhoneBook> result = this.getIPhoneBookList(this.phoneBookJpaRpository.findAllByCategory(category));
+        List<IPhoneBook> result = this.getIPhoneBookList(this.phoneBookJpaRpository.findAllByCategory((CategoryEntity) category));
 //        List<PhonebookEntity> list = this.phoneBookJpaRpository.findAllByCategory(category);
 //        List<IPhoneBook> result = list.stream()
 //                .map(x -> (IPhoneBook)x)

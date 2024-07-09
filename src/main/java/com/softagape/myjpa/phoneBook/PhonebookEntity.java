@@ -1,5 +1,7 @@
 package com.softagape.myjpa.phoneBook;
 
+import com.softagape.myjpa.catCategory.CategoryEntity;
+import com.softagape.myjpa.catCategory.ICategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -10,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="phonebook_tb")
+@Table(name="phonebook_tbl")
 public class PhonebookEntity implements IPhoneBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +23,9 @@ public class PhonebookEntity implements IPhoneBook {
     private String name;
 
     @NotNull
-    @Column(length = 10)
-    private ECategory category;
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private CategoryEntity category;
 
     @NotNull
     @Column(length = 20)
@@ -37,5 +40,15 @@ public class PhonebookEntity implements IPhoneBook {
                 , this.id, this.name, this.category, this.phoneNumber, this.email);
     }
 
+    @Override
+    public void setCategory(ICategory category) {
+        if ( category == null ) {
+            return;
+        }
+        CategoryEntity entity = new CategoryEntity();
+        entity.copyFields(category); //
+//        this.category = (CategoryEntity) entity; // 런타임 에러가 일어나기 때문에 안좋음
+        this.category = entity;
+    }
 }
 

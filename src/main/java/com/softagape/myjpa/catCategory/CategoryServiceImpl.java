@@ -60,13 +60,6 @@ public class CategoryServiceImpl implements ICategoryService<ICategory> {
     }
 
     @Override
-    public ICategory insert(String name) throws Exception {
-        CategoryDto categoryDto = CategoryDto.builder()
-                .id(0L).name(name).build();
-        return this.insert(categoryDto);
-    }
-
-    @Override
     public ICategory insert(ICategory category) throws Exception {
         if (!this.isValidInsert(category)) {
             return null;
